@@ -1,0 +1,17 @@
+{
+    "name": "e-bookcarwler",
+    "version": "1.0.0",
+    "description": "thu的电子书爬虫",
+    "main": "index.js",
+    "dependencies": {
+        "cheerio": "^0.17.0",
+        "express": "^4.9.5",
+        "superagent": "^0.20.0"
+    },
+    "scripts": {
+        "start": "/",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "thu",
+    "license": "ISC"
+}
