@@ -15,7 +15,8 @@ app.get('/', function (req, res, next) {
       }
       var $ = cheerio.load(sres.text);
       result.push({
-        'jingdong': ($(".skcolor_ljg").eq(0).text() == book) && (book !== "")
+        'jingdong': ($(".skcolor_ljg").eq(0).text() == book) && (book !== ""),
+        'Num': $('*').length
       });
       res.send(result);
     });

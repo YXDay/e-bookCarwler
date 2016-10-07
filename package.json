@@ -1,6 +1,6 @@
 {
     "name": "e-bookcarwler",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "thu的电子书爬虫",
     "main": "index.js",
     "dependencies": {
