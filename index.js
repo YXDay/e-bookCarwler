@@ -42,16 +42,22 @@ app.post('/', function (req, res, next) {
                 return next(err);
             }
             var $ = cheerio.load(sres.text);
+            var price = Number.MAX_VALUE;
             // 取到内部标志该书的号码
             var id = $('.ebook_price').eq(0).next().attr('id');
-            superagent.get('http://p.3.cn/prices/mgets?skuids=' + id).end(function (err, sres) {
-                console.log(sres);
-            });
-            result.push({
-                name: 'jingdong',
-                result: ($('.skcolor_ljg').eq(0).text() === book) && (book !== '')
-            });
-            res.send(result);
+            if (id) {
+                superagent.get('http://p.3.cn/prices/mgets?skuids=' + id).end(function (err, sres) {
+                    price = JSON.parse(sres.text)[0].p;
+                    result.push({
+                        name: 'jingdong',
+                        price: price
+                    });
+                    res.send(result);
+                });
+            }
+            else {
+                res.send(result);
+            }
         });
 });
 

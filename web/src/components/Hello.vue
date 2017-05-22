@@ -3,6 +3,7 @@
         <main>
             <input type="text" v-model="bookName">
             <input type="submit" @click="search">
+            <div>{{response}}</div>
         </main>
     </div>
 </template>
@@ -10,7 +11,8 @@
 export default {
     data() {
             return {
-                bookName: ''
+                bookName: '',
+                response: {}
             }
         },
     methods: {
@@ -22,9 +24,9 @@ export default {
                 },
                 type: 'POST'
             }).done((response) => {
-                console.log(response);
+                this.response = response;
             }).fail((response) => {
-                console.log(response);
+                this.response = response;
             });
         }
     }
