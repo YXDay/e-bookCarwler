@@ -11,18 +11,18 @@
 // 观望中的平台
 // 网易蜗牛读书
 
-var express = require('express');
-var cheerio = require('cheerio');
-var superagent = require('superagent');
+let express = require('express');
+let cheerio = require('cheerio');
+let superagent = require('superagent');
 
-var app = express();
+let app = express();
 
-var bodyParser = require('body-parser');
+let bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-var result = [];
+let result = [];
 
 // 设置跨域访问
 app.all('*', function (req, res, next) {
@@ -36,15 +36,16 @@ app.all('*', function (req, res, next) {
 
 app.post('/', function (req, res, next) {
     result = [];
-    var book = req.body.bookName;
-    superagent.get('http://s-e.jd.com/Search?key=' + book + '&enc=utf-8').end(function (err, sres) {
+    let book = req.body.bookName;
+    let jingdongPromise = new Promise(function (resolve, reject) {
+        superagent.get('http://s-e.jd.com/Search?key=' + book + '&enc=utf-8').end(function (err, sres) {
             if (err) {
                 return next(err);
             }
-            var $ = cheerio.load(sres.text);
-            var price = Number.MAX_VALUE;
+            let $ = cheerio.load(sres.text);
+            let price = Number.MAX_VALUE;
             // 取到内部标志该书的号码
-            var id = $('.ebook_price').eq(0).next().attr('id');
+            let id = $('.ebook_price').eq(0).next().attr('id');
             if (id) {
                 superagent.get('http://p.3.cn/prices/mgets?skuids=' + id).end(function (err, sres) {
                     price = JSON.parse(sres.text)[0].p;
@@ -52,13 +53,18 @@ app.post('/', function (req, res, next) {
                         name: 'jingdong',
                         price: price
                     });
-                    res.send(result);
+                    resolve();
                 });
             }
             else {
-                res.send(result);
+                resolve();
             }
         });
+    });
+    let allDone = Promise.all([jingdongPromise]);
+    allDone.then(function (value) {
+        res.send(result);
+    });
 });
 
 
